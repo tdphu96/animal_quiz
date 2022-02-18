@@ -1,4 +1,4 @@
-package com.animal_quiz;
+package com.haithangban.dongvatnhinhinhdoanten;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "animal_quiz";
+    return "Dong";
   }
 }
