@@ -1,14 +1,14 @@
 import React from 'react'
 import { Text, View, StyleSheet, TouchableOpacity, Dimensions, ImageBackground, Image } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import * as Animatable from "react-native-animatable";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
-import { setMusic, setVibrate } from "../redux/reducers/settingReducer";
+import { setMusic } from "../redux/reducers/settingReducer";
 import frame_setting from '../asset/icons/frame_setting.png'
 import button1 from '../asset/icons/play.png'
 import close from '../asset/icons/close.png'
 import label from '../asset/icons/label.png'
-import * as Animatable from "react-native-animatable";
 import useClickSound from "../hookCustom/useClickSound";
 const { width, height } = Dimensions.get("screen");
 const Setting = () => {

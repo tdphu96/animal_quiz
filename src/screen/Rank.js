@@ -1,22 +1,76 @@
 import React from "react";
-import { Text, View, StyleSheet, Dimensions } from "react-native";
-const {height, width} = Dimensions.get('screen')
+import { Text, View, StyleSheet, Dimensions, ImageBackground, TouchableOpacity, Image, ScrollView } from "react-native";
+import * as Animatable from "react-native-animatable";
+import label from "../asset/icons/label.png";
+import close from "../asset/icons/close.png";
+import { useNavigation } from "@react-navigation/native";
+import man from "../asset/icons/man_1.png";
+import button from '../asset/icons/play.png'
+const { height, width } = Dimensions.get("screen");
 const Rank = () => {
+  const navigation = useNavigation();
+  const UserRank = (e, i) => {
+    e = { name: "Trần Văn A", result: 1 };
+    let { name, result } = e;
+    return (
+      <View key={i} style={styles.frame_user}>
+        <Text style={{fontSite: 13, color: '#000', width: 25}}>{i+1}</Text>
+        <Image source={man} style={{ height: 40, width: 40, marginRight: 15 }} />
+        <View>
+          <Text>{name}</Text>
+          <Text>{result+i}</Text>
+        </View>
+      </View>
+    );
+  };
   return (
     <View style={styles.frame_rank}>
-      <View style={styles.bg_opacity}/>
-      <View style={styles.body}>
-        <Text>PHÁ ĐẢO GAME</Text>
-      </View>
+      <View style={styles.bg_opacity} />
+      <Animatable.View
+        animation={"zoomIn"}
+        duration={200}
+        easing="linear">
+        <View style={styles.body}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={{ position: "absolute", right: -15, top: -15 }}>
+            <Image source={close} style={{ height: 40, width: 40 }} />
+          </TouchableOpacity>
+          <ImageBackground resizeMode={"stretch"} source={label} style={styles.label}>
+            <Text style={styles.txt_setting}>Hạng</Text>
+          </ImageBackground>
+          <ScrollView style={styles.list_user_rank}>
+            {[...Array(100).keys()].map((e, i) => {
+              return (
+                UserRank(e, i)
+              );
+            })}
+          </ScrollView>
+        </View>
+        <View style={styles.frame_profile_me}>
+          <Text style={{fontSite: 13, color: '#000'}}>30</Text>
+          <Image source={man} style={{ height: 40, width: 40, marginHorizontal: 15 }} />
+          <View style={{flexGrow: 1,}}>
+            <Text>Kỹ lục mới</Text>
+            <Text>20</Text>
+          </View>
+          <TouchableOpacity onPress={() => alert('lưu profile lại')}>
+            <ImageBackground
+              resizeMode={'stretch'} source={button}
+             style={{height: 35, width: 70, justifyContent:"center", alignItems:"center"}}
+            >
+              <Text style={{color: '#FFF'}}>Lưu</Text>
+            </ImageBackground>
+          </TouchableOpacity>
+        </View>
+      </Animatable.View>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   frame_rank: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
   bg_opacity: {
     height,
@@ -27,13 +81,52 @@ const styles = StyleSheet.create({
     top: 0,
   },
   body: {
-    backgroundColor: '#FF7F50',
+    borderWidth: 5,
+    borderColor: "#ffad00",
+    backgroundColor: "#e7c99e",
     minHeight: 300,
     width: width - 50,
+    alignItems: "center",
+    borderRadius: 20,
+  },
+  label: {
+    width: 300,
+    height: 90,
+    position: "absolute",
+    top: -60,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  txt_setting: {
+    top: -15,
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#91181d",
+  },
+  list_user_rank: {
+    maxHeight: 300,
+    width: width - 50,
+    paddingHorizontal: 40,
+    marginTop: 40
+  },
+  frame_profile_me: {
+    marginTop: 10,
+    borderWidth: 5,
     borderRadius: 10,
-    overflow: 'hidden',
-    justifyContent: 'center',
+    borderColor: "#ffad00",
+    backgroundColor: "#e7c99e",
+    height: 90,
+    width: width - 50,
+    paddingHorizontal: 30,
+    flexDirection: 'row',
     alignItems: 'center',
-  }
-})
-export default Rank
+  },
+  frame_user: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    height: 50,
+    marginBottom: 10,
+  },
+});
+export default Rank;

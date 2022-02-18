@@ -66,7 +66,7 @@ const Home = () => {
             resizeMode={'contain'} source={setting_group}
            style={styles.image_setting_button}
           >
-            <Text style={{fontSize: 13, color:'#FFF'}}>Câu {profile.level}</Text>
+            <Text style={{fontSize: 13, marginLeft: 15, color:'#FFF'}}>Câu {profile.level}</Text>
           </ImageBackground>
         </TouchableOpacity>
         <View style={styles.frame_heart}>
