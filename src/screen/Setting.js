@@ -1,21 +1,69 @@
 import React from 'react'
-import { Text, View, StyleSheet, TouchableOpacity, Dimensions, ImageBackground, Image } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+  ImageBackground,
+  Image,
+  Linking,
+  Share
+} from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import * as Animatable from "react-native-animatable";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
-import { setMusic } from "../redux/reducers/settingReducer";
+import {setClick, setMusic} from "../redux/reducers/settingReducer";
 import frame_setting from '../asset/icons/frame_setting.png'
 import button1 from '../asset/icons/play.png'
 import close from '../asset/icons/close.png'
 import label from '../asset/icons/label.png'
 import useClickSound from "../hookCustom/useClickSound";
+import useBannerAds from "../hookCustom/useBannerAds";
+import AUTH from "../firebase/auth";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 const { width, height } = Dimensions.get("screen");
 const Setting = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation()
+  const AdBanner = useBannerAds()
   const settings = useSelector(state => state.settings);
   const { soundClick } = useClickSound()
+  const user = AUTH.useUserCurrent();
+  const save = async () => {
+    try {
+      soundClick();
+      if (!user) await AUTH.loginGoogle();
+      else await AUTH.logout();
+    } catch (e) {
+      console.log(e)
+    }
+  };
+  const share = async () => {
+    try {
+      await Share.share(
+          {
+            message: 'https://play.google.com/store/apps/details?id=com.haithangban.dongvatnhinhinhdoanten&hl=vi&gl=US',
+            title:'Chia sẻ'
+          },
+          {
+            dialogTitle:'ĐỐ VUI DÂN GIAN'
+          }
+      )
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+  const Volume = () => {
+    dispatch(setClick(!settings.click));
+    soundClick();
+  }
+  const Music = () => {
+    dispatch(setMusic(!settings.music))
+    soundClick()
+  }
   return(
     <View style={styles.frame_setting}>
       <View style={styles.bg_opacity}/>
@@ -31,12 +79,14 @@ const Setting = () => {
           <Image source={close} style={{height: 40, width: 40}}/>
         </TouchableOpacity>
         <View style={{paddingTop: 60}}>
-          <TouchableOpacity onPress={() => soundClick()}>
+          <TouchableOpacity onPress={save}>
             <ImageBackground resizeMode={"stretch"} source={button1} style={styles.btt_button}>
-              <Text style={styles.txt_btt}>Lưu hồ sơ</Text>
+              <Text style={styles.txt_btt}>
+                {user ? "Đăng xuất" : "Lưu hồ sơ"}
+              </Text>
             </ImageBackground>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => soundClick()}>
+          <TouchableOpacity onPress={share}>
             <ImageBackground resizeMode={"stretch"} source={button1} style={styles.btt_button}>
               <Text style={styles.txt_btt}>chia sẻ</Text>
             </ImageBackground>
@@ -51,20 +101,20 @@ const Setting = () => {
           </TouchableOpacity>
         </View>
         <View style={{position:"absolute", bottom: -53, flexDirection:'row', justifyContent:'space-between', width: 180}}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={Volume}>
             <ImageBackground resizeMode={'stretch'} source={button1} style={{height: 48, width: 48, justifyContent:"center", alignItems:"center"}}>
-              <FontAwesome5 name={'volume-up'} size={20} color={'#FFF'}/>
+              <MaterialCommunityIcons name={settings.click ? 'volume-high':'volume-off'} size={20} color={'#FFF'}/>
             </ImageBackground>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => dispatch(setMusic(!settings.music))}>
+          <TouchableOpacity onPress={Music}>
             <ImageBackground resizeMode={'stretch'} source={button1} style={{height: 48, width: 48, justifyContent:"center", alignItems:"center"}}>
-              <FontAwesome5 name={'music'} size={20} color={'#FFF'}/>
+              <MaterialCommunityIcons name={settings.music ? 'music':'music-off'} size={20} color={'#FFF'}/>
             </ImageBackground>
           </TouchableOpacity>
         </View>
       </Animatable.View>
-      <View style={{height: 80, width, position: 'absolute', bottom: 0, backgroundColor: '#FFF'}}>
-
+      <View style={{ width, position: "absolute", bottom: 0 }}>
+        <AdBanner />
       </View>
     </View>
   )

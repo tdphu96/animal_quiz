@@ -32,7 +32,7 @@ const AUTH = {}
 //     }
 // }
 
-GoogleSignin.configure({ webClientId: '833129197778-6122ehsq0t1gftrffetn2fhc6ljopom1.apps.googleusercontent.com' });
+GoogleSignin.configure({ webClientId: "339820071138-tjp8r1g5j6gjjsodkvif1iha8e46hsoq.apps.googleusercontent.com" });
 AUTH.loginGoogle = async () => {
     try {
         const { idToken } = await GoogleSignin.signIn();

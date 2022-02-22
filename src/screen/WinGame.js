@@ -7,11 +7,14 @@ import { useDispatch } from "react-redux";
 import button1 from "../asset/icons/play.png";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import label_win from "../asset/icons/label_win.png";
+import useBannerAds from "../hookCustom/useBannerAds";
 const { width, height } = Dimensions.get("screen");
 const WinGame = ({ route }) => {
   const { answer, profile } = route.params;
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const AdBanner = useBannerAds();
+
   const next = () => {
     const newLevel = profile.level + 1;
     const newMoney = profile.money + 1;
@@ -45,8 +48,8 @@ const WinGame = ({ route }) => {
         </View>
       </View>
       </Animatable.View>
-      <View style={{ height: 80, width, position: "absolute", bottom: 0, backgroundColor: "#FFF" }}>
-
+      <View style={{ width, position: "absolute", bottom: 0 }}>
+        <AdBanner />
       </View>
     </View>
   );

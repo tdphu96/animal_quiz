@@ -11,12 +11,14 @@ import GameOver from "./screen/GameOver";
 import WatchADS from "./screen/WatchADS";
 import OptionGame from "./screen/OptionGame";
 import Rank from "./screen/Rank";
+import useAsyncProfileFirebase from "./hookCustom/useAsyncProfileFirebase";
 const Stack = createStackNavigator();
 const Router = () => {
 
   useReduxStorage({ key: "profile", setStateKey: setProfile})
   useReduxStorage({ key: "settings", setStateKey: setSettings})
 
+  useAsyncProfileFirebase({ key: "level"})
   return (
       <Stack.Navigator
           initialRouteName={"PlayGame"}
