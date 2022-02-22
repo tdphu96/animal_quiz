@@ -1,5 +1,15 @@
 import React from "react";
-import { Text, View, StyleSheet, TouchableOpacity, ImageBackground, Linking, Dimensions, Image } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ImageBackground,
+  Linking,
+  Dimensions,
+  Image,
+  Alert
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { setProfile } from "../redux/reducers/profileReducer";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +20,7 @@ import frame_play from '../asset/icons/frame_play.png'
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { setClick, setMusic } from "../redux/reducers/settingReducer";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import AUTH from "../firebase/auth";
 const {height, width} = Dimensions.get('screen')
 const PlayGame = () => {
   const dispatch = useDispatch()
@@ -18,6 +29,32 @@ const PlayGame = () => {
   const settings = useSelector(state => state.settings);
   useMusicSound()
   const { soundClick } = useClickSound()
+
+  const openRank = () => {
+    if (!AUTH.isLogin()) return Alert.alert(
+        "",
+        "Bạn chưa lưu tiến trình chơi !",
+        [
+          {
+            text: "Lưu ngay",
+            onPress: () => AUTH.loginGoogle().then( res => {
+              try {
+                if (res.user) navigation.navigate('Rank')
+              } catch (e) {
+                console.log(e)
+              }
+            }),
+          },
+          {
+            text: "Không",
+            onPress: () => {},
+            style: "cancel",
+          },
+        ],
+    );
+    navigation.navigate('Rank')
+  }
+
   const PLAY_GAME = () => {
     if(profile.level > 1) return (
       <View>
@@ -76,7 +113,7 @@ const PlayGame = () => {
             <FontAwesome name={"star"} size={25} color={'#FFF'} />
           </ImageBackground>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("Rank")}>
+        <TouchableOpacity onPress={openRank}>
           <ImageBackground resizeMode={'stretch'} style={styles.button} source={play}>
             <FontAwesome name={"bar-chart"} size={25} color={'#FFF'} />
           </ImageBackground>

@@ -2,8 +2,8 @@ import React from "react";
 import { Text, View, StyleSheet, Dimensions, TouchableOpacity, ImageBackground } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { useNavigation } from "@react-navigation/native";
-import { setLevel, setMoney } from "../redux/reducers/profileReducer";
-import { useDispatch } from "react-redux";
+import {setBestLevel, setLevel, setMoney} from "../redux/reducers/profileReducer";
+import {useDispatch, useSelector} from "react-redux";
 import button1 from "../asset/icons/play.png";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import label_win from "../asset/icons/label_win.png";
@@ -15,11 +15,13 @@ const WinGame = ({ route }) => {
   const navigation = useNavigation();
   const AdBanner = useBannerAds();
 
+  const bestLevel = useSelector(state => state.profile.bestLevel)
   const next = () => {
     const newLevel = profile.level + 1;
     const newMoney = profile.money + 1;
     dispatch(setLevel(newLevel));
     dispatch(setMoney(newMoney));
+    if (newLevel > bestLevel) dispatch(setBestLevel(newLevel))
     navigation.navigate("Home");
   };
   return (

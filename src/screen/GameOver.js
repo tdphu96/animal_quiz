@@ -2,24 +2,40 @@ import React from "react";
 import { Text, View, StyleSheet, TouchableOpacity, Dimensions, ImageBackground } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { useDispatch, useSelector } from "react-redux";
-import { setProfile } from "../redux/reducers/profileReducer";
+import {setMoney, setProfile} from "../redux/reducers/profileReducer";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import label from "../asset/icons/label.png";
+import useBannerAds from "../hookCustom/useBannerAds";
+import AUTH from "../firebase/auth";
+import useClickSound from "../hookCustom/useClickSound";
+import useRewardedAds from "../hookCustom/useRewardedAds";
 const {height, width} = Dimensions.get('screen')
 const GameOver = () => {
   const dispatch = useDispatch()
   const profile = useSelector(state => state.profile);
+  const AdBanner = useBannerAds();
   const navigation = useNavigation();
+  const { soundClick } = useClickSound();
+  const user = AUTH.useUserCurrent();
+  const save = async () => {
+    soundClick();
+    if (!user) await AUTH.loginGoogle();
+    else await AUTH.logout();
+  };
+  const { showRewardedAds } = useRewardedAds({ key: 'money', setStateKey: setMoney});
+  const ads = () => {
+    showRewardedAds()
+  }
   const REPLAY = () => {
     dispatch(setProfile({level: 1,money: 10,heart: 3}))
     navigation.navigate("Home")
   }
   const NEXT_GAME = () => {
-    if(profile.money > 300) {
-      let newProfile = {lever: profile.lever, money: profile.money - 300, heart: profile.heart + 3}
+    if(profile.money > 15) {
+      let newProfile = {lever: profile.lever, money: profile.money - 15, heart: profile.heart + 3}
       dispatch(setProfile(newProfile))
-    }else alert('không còn tiền vui long xem quản cáo')
+    } else ads()
   }
   return (
     <View style={styles.frame_game_over}>
@@ -37,31 +53,47 @@ const GameOver = () => {
             <Text style={{fontSize: 35, color: '#000'}}>{profile.level}</Text>
           </View>
           <View>
-            <TouchableOpacity style={styles.button}>
-              <Text>Tặng 300 xu khi xem quảng cáo</Text>
+            <TouchableOpacity
+                onPress={ads}
+                style={styles.button}>
+              <Text style={{fontWeight: "bold", color: "#91181d"}}>Tặng 10 xu khi xem quảng cáo</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={NEXT_GAME}
               style={styles.button}
             >
-              <Text>Dùng 300 xu để chơi tiếp</Text>
+              <Text style={{fontWeight: "bold", color: "#91181d"}}>Dùng 15 xu để chơi tiếp</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={REPLAY}
               style={styles.button}
             >
-              <Text>Chơi lại</Text>
+              <Text style={{fontWeight: "bold", color: "#91181d"}}>Chơi lại</Text>
             </TouchableOpacity>
           </View>
         </View>
-        <View style={styles.frame_profile_me}>
-          <View>
-            <FontAwesome5 name={'user'}/>
-          </View>
-          <Text>Lưu profile</Text>
-        </View>
+         {
+           !user &&
+           <TouchableOpacity
+               onPress={save}
+           >
+             <View style={styles.frame_profile_me}>
+               <View>
+                 <FontAwesome5 name={"user"} size={40} color={"#f1480b"} />
+               </View>
+               <Text
+                   style={{
+                     fontSize: 30, marginLeft: 10, color: '#2c2828', fontWeight: "bold"
+                   }}
+               >
+                 Lưu profile
+               </Text>
+             </View>
+           </TouchableOpacity>
+         }
        </Animatable.View>
-      <View style={{height: 80, width, position: 'absolute', bottom: 0, backgroundColor: 'green'}}>
+      <View style={{ width, position: "absolute", bottom: 0 }}>
+        <AdBanner />
       </View>
     </View>
   )

@@ -4,11 +4,13 @@ const initState = {
   level: 1,
   money: 10,
   heart: 3,
+  bestLevel: 1,
 };
 const slide = createSlice({
   name: "profile",
   initialState: initState,
   reducers: {
+    setBestLevel(state, action) { return state = { ...state, ...{ bestLevel: action.payload }}},
     setLevel(state, action) { return state = { ...state, ...{ level: action.payload }}},
     setMoney(state, action) { return state = { ...state, ...{ money: action.payload }}},
     setHeart(state, action) { return state = { ...state, ...{ heart: action.payload }}},
@@ -23,5 +25,5 @@ const slide = createSlice({
   },
 });
 const { actions, reducer } = slide;
-export const {setProfile,setMoney, setLevel, setHeart} = actions;
+export const {setProfile,setBestLevel,setMoney, setLevel, setHeart} = actions;
 export default reducer;

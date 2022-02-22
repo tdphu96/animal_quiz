@@ -10,6 +10,8 @@ FIRESTORE.usersRef = firestore().collection('users')
 
 const USER = {};
 
+USER.getBestLevel = (uid) => FIRESTORE.usersRef.doc(uid).path("level")
+
 USER.obj = (obj) => {
     let { name, level, money } = obj;
     name = name || ''
