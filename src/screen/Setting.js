@@ -7,10 +7,8 @@ import {
   Dimensions,
   ImageBackground,
   Image,
-  Linking,
   Share
 } from "react-native";
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import * as Animatable from "react-native-animatable";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
@@ -54,7 +52,6 @@ const Setting = () => {
     } catch (error) {
       console.log(error)
     }
-
   }
   const Volume = () => {
     dispatch(setClick(!settings.click));
